@@ -175,3 +175,30 @@
   --bg-color-rgb: 32, 33, 36;
   --card-bg-rgb: 48, 49, 52;
 }
+
+.globe-container {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+.globe-container canvas {
+  width: 1000px !important;
+  height: 1000px !important;
+  max-width: none !important;
+}
+
+.landing-nav, .landing-content, .landing-footer {
+  z-index: 10;
+  position: relative;
+}

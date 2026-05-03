@@ -6,13 +6,15 @@
 
 ## ✨ Features
 
-- **Interactive 3D Timeline**: A smooth, physics-based coverflow navigation system to explore the election stages.
+- **Cinematic Onboarding**: A high-end "Click to Enter" splash screen transitioning into an interactive glass-pill selection flow.
+- **3D Animated Globe**: Integrated `cobe` WebGL Earth for a global atmospheric context.
+- **Floating AI Assistant**: A persistent, expandable AI Orb that provides instant civic guidance without interrupting the learning flow.
+- **Hyperjump Transition**: Dramatic cinematic zoom-in effect when entering the dashboard.
+- **Interactive 3D Timeline**: A smooth, physics-based coverflow navigation system to explore election stages.
 - **Location-Aware Content**: Dynamically adapts election rules and legal facts based on the selected country (US, India, UK, etc.).
-- **AI Chat Assistant**: Powered by AI to answer specific questions about civic processes and local laws.
 - **Premium Glassmorphism UI**: High-end visual design with real-time backdrop blurs, dark mode by default, and smooth spring animations.
 - **Progress Tracking**: "Mark as Done" functionality to keep track of your civic learning journey.
 - **Civic Quiz**: Test your knowledge at the end of the timeline with dynamic feedback.
-- **Sticky Navigation**: Fixed header with progress indicator for seamless multi-section browsing.
 
 ## 🚀 Tech Stack
 

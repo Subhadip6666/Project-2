@@ -3,113 +3,8 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-mo
 import confetti from 'canvas-confetti';
 import './index.css';
 
-const COUNTRIES = [
-  { code: 'US', name: 'United States' },
-  { code: 'IN', name: 'India' },
-  { code: 'UK', name: 'United Kingdom' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'AU', name: 'Australia' },
-];
-
-const COUNTRY_SPECIFIC_CONTENT = {
-  US: [
-    { id: 1, title: "US Voter Registration", details: "In the US, you must be a citizen and 18 by Election Day. Most states require registration weeks in advance, though some offer same-day registration.", fact: "Did you know? You can register to vote at the DMV in most states thanks to the 'Motor Voter' act." },
-    { id: 3, title: "Primary Elections", details: "Before the general election, states hold Primaries or Caucuses to choose party nominees for the President and other offices.", fact: "The 'Iowa Caucus' is traditionally the first major contest in the US presidential primary season." },
-    { id: 6, title: "Electoral College", details: "The US President is not elected directly. Instead, voters choose 'electors' who then cast votes for the President.", fact: "A candidate can win the popular vote but lose the election due to the Electoral College system." }
-  ],
-  IN: [
-    { id: 1, title: "EPIC Registration", details: "In India, the Election Commission issues an Elector's Photo Identity Card (EPIC). Registration can be done online via the NVSP portal.", fact: "India has the largest electorate in the world, with over 900 million eligible voters." },
-    { id: 5, title: "VVPAT Counting", details: "India uses EVMs with Voter Verifiable Paper Audit Trail (VVPAT). This allows voters to verify that their vote was cast correctly.", fact: "The ink used to mark voters' fingers is 'Indelible Ink' which lasts for weeks." },
-    { id: 7, title: "Model Code of Conduct", details: "The MCC comes into force immediately after the election schedule is announced, regulating the behavior of parties and candidates.", fact: "No new projects or subsidies can be announced by the government once MCC is in place." }
-  ],
-  UK: [
-    { id: 1, title: "UK Electoral Register", details: "You must be on the electoral register to vote. In the UK, you can register to vote if you are 16 or over (but can't vote until 18).", fact: "The UK uses individual electoral registration rather than household registration." },
-    { id: 4, title: "Polling Cards", details: "Before an election, you'll receive a poll card telling you when to vote and at which polling station.", fact: "You don't actually need your poll card to vote, as long as you're on the register." },
-    { id: 6, title: "First Past the Post", details: "The UK uses the 'First Past the Post' system for general elections, where the candidate with the most votes in a constituency wins.", fact: "The leader of the party with the most seats in the House of Commons is usually invited by the Monarch to form a government." }
-  ]
-};
-
-const LANGUAGES = [
-  { code: 'en', name: 'English' },
-  { code: 'es', name: 'Español' },
-  { code: 'hi', name: 'Hindi' },
-  { code: 'fr', name: 'Français' },
-  { code: 'de', name: 'Deutsch' },
-];
-
-const TIMELINE_STAGES = [
-  {
-    id: 1,
-    title: "Voter Registration",
-    teaser: "The first step to participate.",
-    image: "https://picsum.photos/seed/register/800/1200",
-    details: "Voter registration is the process where eligible citizens enroll to vote. You must provide proof of age and citizenship. Once registered, you are added to the electoral roll.",
-    fact: "Did you know? In many countries, you can register to vote when you get your driver's license.",
-    points: ["Check eligibility requirements", "Fill out the application form", "Keep your voter ID safe"]
-  },
-  {
-    id: 2,
-    title: "Candidate Nomination",
-    teaser: "People step forward to represent you.",
-    image: "https://picsum.photos/seed/candidate/800/1200",
-    details: "Political parties and independent individuals file their nomination papers. The election commission scrutinizes these to ensure they meet all legal requirements to run for office.",
-    fact: "Did you know? Candidates often have to pay a deposit, which they lose if they don't get a minimum percentage of votes.",
-    points: ["Filing nomination papers", "Scrutiny of candidates", "Withdrawal period"]
-  },
-  {
-    id: 3,
-    title: "Election Campaigning",
-    teaser: "Candidates share their vision and promises.",
-    image: "https://picsum.photos/seed/campaign/800/1200",
-    details: "During this period, candidates organize rallies, debates, and distribute manifestos. It's a time for voters to understand what each candidate stands for before making a decision.",
-    fact: "Did you know? Campaigning must officially stop a certain number of hours (often 48) before voting begins. This is called the 'election silence' period.",
-    points: ["Read party manifestos", "Attend public debates", "Verify claims and promises"]
-  },
-  {
-    id: 4,
-    title: "Voting Day",
-    teaser: "Your chance to make your voice heard.",
-    image: "https://picsum.photos/seed/voting/800/1200",
-    details: "Voters go to designated polling booths, verify their identity, and cast their vote secretly. Every vote has equal value, regardless of the voter's background.",
-    fact: "Did you know? The secret ballot system is designed to prevent intimidation and bribery.",
-    points: ["Bring valid ID", "Find your polling station", "Cast your vote secretly"]
-  },
-  {
-    id: 5,
-    title: "Vote Counting",
-    teaser: "Every single vote is carefully tallied.",
-    image: "https://picsum.photos/seed/counting/800/1200",
-    details: "Under strict security and in the presence of candidate representatives, the votes (electronic or paper) are counted. The process is designed to be highly transparent.",
-    fact: "Did you know? EVMs (Electronic Voting Machines) are standalone devices not connected to any network, making them resistant to remote hacking.",
-    points: ["Strict security protocols", "Presence of observers", "Transparent tallying"]
-  },
-  {
-    id: 6,
-    title: "Results Declaration",
-    teaser: "The winners are officially announced.",
-    image: "https://picsum.photos/seed/results/800/1200",
-    details: "The election commission officially declares the winners based on the count. The candidate with the highest number of votes in a constituency wins.",
-    fact: "Did you know? If the margin is extremely close, candidates can legally request a recount.",
-    points: ["Official announcement", "Issuing winning certificate", "Accepting the mandate"]
-  },
-  {
-    id: 7,
-    title: "Swearing In",
-    teaser: "The new leaders take charge.",
-    image: "https://picsum.photos/seed/swearingin/800/1200",
-    details: "Elected representatives take an oath of office, swearing allegiance to the constitution. This marks the formal beginning of their term in public service.",
-    fact: "Did you know? The inauguration date is often fixed by law to ensure a smooth transition of power.",
-    points: ["Taking the oath", "Formation of government", "Beginning of official duties"]
-  }
-];
-
-const STARTER_QUESTIONS = [
-  "How do I register to vote?",
-  "What happens on voting day?",
-  "How are votes counted?",
-  "What is the role of the Election Commission?",
-  "What if there is a tie?"
-];
+import { COUNTRIES, COUNTRY_SPECIFIC_CONTENT, GLOBAL_FALLBACK_CONTENT, LANGUAGES, TIMELINE_STAGES, STARTER_QUESTIONS } from './data';
+import createGlobe from 'cobe';
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -144,8 +39,8 @@ function App() {
   const [stages, setStages] = useState(TIMELINE_STAGES);
 
   useEffect(() => {
-    // Update stages based on country
-    const countryContent = COUNTRY_SPECIFIC_CONTENT[userSettings.country] || [];
+    // Update stages based on country, fallback to global defaults if specific not found
+    const countryContent = COUNTRY_SPECIFIC_CONTENT[userSettings.country] || GLOBAL_FALLBACK_CONTENT;
     const updatedStages = TIMELINE_STAGES.map(stage => {
       const specific = countryContent.find(c => c.id === stage.id);
       return specific ? { ...stage, ...specific } : stage;
@@ -167,6 +62,8 @@ function App() {
   const [isTyping, setIsTyping] = useState(false);
   const [chatError, setChatError] = useState('');
   const chatEndRef = useRef(null);
+  const [isHyperjumping, setIsHyperjumping] = useState(false);
+  const [isChatOpen, setIsChatOpen] = useState(false);
 
   // Quiz state
   const [quizData, setQuizData] = useState(null);
@@ -235,6 +132,17 @@ function App() {
   // Coverflow Navigation
   const nextSlide = () => setCurrentIndex(prev => Math.min(prev + 1, TIMELINE_STAGES.length - 1));
   const prevSlide = () => setCurrentIndex(prev => Math.max(prev - 1, 0));
+
+  // Keyboard navigation for timeline
+  useEffect(() => {
+    if (!hasOnboarded) return;
+    const handleKeyDown = (e) => {
+      if (e.key === 'ArrowRight') nextSlide();
+      if (e.key === 'ArrowLeft') prevSlide();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [hasOnboarded]);
 
   // ----- Chat Logic -----
   const sendChatMessage = async (msg) => {
@@ -383,14 +291,20 @@ function App() {
   const handleOnboardSubmit = (e) => {
     e.preventDefault();
     if (userSettings.username.trim()) {
-      setHasOnboarded(true);
-      localStorage.setItem('hasOnboarded', 'true');
-      localStorage.setItem('userSettings', JSON.stringify(userSettings));
+      setIsHyperjumping(true);
       
       // Update first chat message with name
       setChatHistory([
         { role: 'assistant', content: `Hello ${userSettings.username}! I am ElectionIQ, your civic education assistant for ${COUNTRIES.find(c => c.code === userSettings.country)?.name}. How can I help you today?` }
       ]);
+
+      // Dramatic hyperjump transition
+      setTimeout(() => {
+        setHasOnboarded(true);
+        localStorage.setItem('hasOnboarded', 'true');
+        localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        setIsHyperjumping(false);
+      }, 1500);
     }
   };
   return (
@@ -400,8 +314,8 @@ function App() {
           key="landing"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          exit={{ opacity: 0, x: -100 }}
-          transition={{ duration: 0.5 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.8 }}
           style={{ width: '100%', height: '100%' }}
         >
           <LandingPage 
@@ -410,6 +324,7 @@ function App() {
             onSubmit={handleOnboardSubmit}
             theme={theme}
             toggleTheme={toggleTheme}
+            isHyperjumping={isHyperjumping}
           />
         </motion.div>
       ) : (
@@ -605,100 +520,18 @@ function App() {
           </AnimatePresence>
         </section>
 
-        {/* Section 2: Chat Assistant */}
-        <section className="section">
-          <motion.h2 
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-          >
-            AI Chat Assistant
-          </motion.h2>
-          <motion.div 
-            className="chat-container"
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ type: "spring", bounce: 0.3 }}
-          >
-            <div className="chat-history">
-              <AnimatePresence initial={false}>
-                {chatHistory.map((msg, idx) => (
-                  <motion.div 
-                    key={idx}
-                    initial={{ opacity: 0, y: 20, scale: 0.8, originX: msg.role === 'user' ? 1 : 0 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20 }}
-                    className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}
-                  >
-                    <div>{msg.content}</div>
-                    <div className="timestamp">{new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</div>
-                  </motion.div>
-                ))}
-                
-                {isTyping && (
-                  <motion.div 
-                    initial={{ opacity: 0, y: 10, scale: 0.8, originX: 0 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8, transition: { duration: 0.2 } }}
-                    className="chat-bubble ai typing-indicator-bubble"
-                  >
-                    <div className="typing-indicator">
-                      <span></span><span></span><span></span>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-              
-              {chatError && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="error-text" style={{ textAlign: 'center' }}>
-                  {chatError}
-                </motion.div>
-              )}
-              <div ref={chatEndRef} />
-            </div>
-            
-            <div className="chat-input-area">
-              <div className="starter-chips">
-                {STARTER_QUESTIONS.map((q, i) => (
-                  <motion.button 
-                    key={i} 
-                    whileHover={{ scale: 1.05, y: -2 }}
-                    whileTap={{ scale: 0.95 }}
-                    initial={{ opacity: 0, x: 20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: i * 0.1 }}
-                    className="chip" 
-                    onClick={() => sendChatMessage(q)}
-                  >
-                    {q}
-                  </motion.button>
-                ))}
-              </div>
-              <form 
-                className="input-form"
-                onSubmit={(e) => { e.preventDefault(); sendChatMessage(chatInput); }}
-              >
-                <input 
-                  type="text" 
-                  value={chatInput}
-                  onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Ask a question about elections..."
-                  disabled={isTyping}
-                />
-                <motion.button 
-                  whileHover={{ scale: 1.05, boxShadow: "0px 5px 15px rgba(26,115,232,0.4)" }}
-                  whileTap={{ scale: 0.95 }}
-                  type="submit" 
-                  className="btn btn-primary" 
-                  disabled={isTyping || !chatInput.trim()}
-                >
-                  Send
-                </motion.button>
-              </form>
-            </div>
-          </motion.div>
-        </section>
+        {/* Floating AI Chat Overlay */}
+        <FloatingAIChat 
+          isOpen={isChatOpen}
+          setIsOpen={setIsChatOpen}
+          chatHistory={chatHistory}
+          sendChatMessage={sendChatMessage}
+          chatInput={chatInput}
+          setChatInput={setChatInput}
+          isTyping={isTyping}
+          STARTER_QUESTIONS={STARTER_QUESTIONS}
+          chatEndRef={chatEndRef}
+        />
 
         {/* Section 3: Quiz */}
         <section className="section quiz-section">
@@ -901,83 +734,217 @@ function App() {
 }
 
 // Landing Page Component
-function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleTheme }) {
+function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleTheme, isHyperjumping }) {
+  const [step, setStep] = useState(0); // 0: Splash, 1: Language, 2: Name/Region
+  const canvasRef = useRef();
+
+  useEffect(() => {
+    let phi = 0;
+    let globe = null;
+
+    const initTimeout = setTimeout(() => {
+      if (canvasRef.current) {
+        globe = createGlobe(canvasRef.current, {
+          devicePixelRatio: 1,
+          width: 800,
+          height: 800,
+          phi: 0,
+          theta: 0.3,
+          dark: theme === 'dark' ? 1 : 0,
+          diffuse: 1.2,
+          mapSamples: 8000,
+          mapBrightness: 6,
+          baseColor: theme === 'dark' ? [0.3, 0.3, 0.3] : [1, 1, 1],
+          markerColor: [0.1, 0.8, 1],
+          glowColor: theme === 'dark' ? [0.1, 0.2, 0.3] : [0.8, 0.8, 0.8],
+          markers: [
+            { location: [37.7595, -122.4367], size: 0.03 },
+            { location: [40.7128, -74.0060], size: 0.1 },
+          ],
+          onRender: (state) => {
+            state.phi = phi;
+            phi += 0.003;
+          }
+        });
+      }
+    }, 500);
+
+    return () => {
+      clearTimeout(initTimeout);
+      if (globe) {
+        globe.destroy();
+      }
+    };
+  }, [theme, step === 2]); // Only recreate globe if step 2 changes significantly (or keep it simple)
+
+  const handleNextStep = (e) => {
+    if (e) e.preventDefault();
+    setStep(prev => prev + 1);
+  };
+
   return (
-    <div className="landing-page">
+    <div className="landing-page" onClick={() => step === 0 && setStep(1)}>
+      <Stardust />
       <div className="landing-bg"></div>
+      
+      {/* Cobe Globe Background */}
+      <motion.div 
+        className="globe-container"
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ 
+          opacity: 1, 
+          scale: isHyperjumping ? 15 : (step === 0 ? 1.2 : 1),
+          filter: isHyperjumping ? "blur(20px)" : "blur(0px)"
+        }}
+        transition={{ 
+          duration: isHyperjumping ? 2 : 1.5, 
+          ease: isHyperjumping ? "circIn" : "easeOut" 
+        }}
+      >
+        <canvas
+          key={theme}
+          ref={canvasRef}
+          style={{ width: 800, height: 800, maxWidth: "100%", aspectRatio: 1 }}
+        />
+      </motion.div>
+
       <header>
         <motion.nav 
-        className="navbar landing-nav"
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-      >
-        <div className="brand">ElectionIQ</div>
-        <button className="theme-toggle" onClick={toggleTheme}>
-          {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
-        </button>
-      </motion.nav>
+          className="navbar landing-nav"
+          initial={{ y: -50, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+        >
+          <div className="brand">ElectionIQ</div>
+          <button className="theme-toggle" onClick={(e) => { e.stopPropagation(); toggleTheme(); }}>
+            {theme === 'light' ? '🌙 Dark' : '☀️ Light'}
+          </button>
+        </motion.nav>
       </header>
 
       <main className="landing-content">
-        <motion.div 
-          className="onboarding-card"
-          initial={{ scale: 0.9, opacity: 0 }}
-          animate={{ scale: 1, opacity: 1 }}
-          transition={{ type: "spring", bounce: 0.3 }}
-        >
-          <div className="onboarding-header">
-            <h1>Global Elections Guide</h1>
-            <p>Empowering voters worldwide through AI-driven education.</p>
-          </div>
-
-          <form onSubmit={onSubmit} className="onboarding-form">
-            <div className="form-group">
-              <label>What's your name?</label>
-              <input 
-                type="text" 
-                placeholder="Enter username"
-                value={userSettings.username}
-                onChange={e => setUserSettings({...userSettings, username: e.target.value})}
-                required
-              />
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label>Country</label>
-                <select 
-                  value={userSettings.country}
-                  onChange={e => setUserSettings({...userSettings, country: e.target.value})}
-                >
-                  {COUNTRIES.map(c => (
-                    <option key={c.code} value={c.code}>{c.name}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="form-group">
-                <label>Language</label>
-                <select 
-                  value={userSettings.language}
-                  onChange={e => setUserSettings({...userSettings, language: e.target.value})}
-                >
-                  {LANGUAGES.map(l => (
-                    <option key={l.code} value={l.code}>{l.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <motion.button 
-              type="submit" 
-              className="btn btn-primary onboard-submit"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+        <AnimatePresence mode="wait">
+          {step === 0 && (
+            <motion.div 
+              key="splash"
+              className="splash-screen"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
             >
-              Get Started
-            </motion.button>
-          </form>
-        </motion.div>
+              <h1 className="splash-title">ElectionIQ</h1>
+              <p className="splash-prompt">Click anywhere to begin</p>
+            </motion.div>
+          )}
+
+          {step === 1 && (
+            <motion.div 
+              key="step1"
+              className="onboarding-card glass-card step1-card"
+              initial={{ scale: 0.9, opacity: 0, y: 30 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ opacity: 0, x: -100, scale: 0.9 }}
+              transition={{ type: "spring", bounce: 0.3 }}
+            >
+              <div className="onboarding-header">
+                <h1>Global Elections Guide</h1>
+                <p>Empowering voters worldwide through AI-driven education.</p>
+              </div>
+
+              <div className="form-group">
+                <label>Select Language / Idioma</label>
+                <div className="pill-group">
+                  {LANGUAGES.map(l => (
+                    <button 
+                      key={l.code}
+                      className={`pill ${userSettings.language === l.code ? 'active' : ''}`}
+                      onClick={() => setUserSettings({...userSettings, language: l.code})}
+                    >
+                      {l.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <motion.button 
+                onClick={handleNextStep}
+                className="btn btn-primary onboard-submit"
+                whileHover={{ scale: 1.02, boxShadow: "0px 10px 20px rgba(26,115,232,0.4)" }}
+                whileTap={{ scale: 0.98 }}
+              >
+                Continue →
+              </motion.button>
+            </motion.div>
+          )}
+
+          {step === 2 && (
+            <motion.div 
+              key="step2"
+              className="onboarding-card glass-card"
+              initial={{ x: 100, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ opacity: 0, scale: 1.2 }}
+              transition={{ type: "spring", bounce: 0.4 }}
+            >
+              <div className="onboarding-header">
+                <h2>Welcome aboard.</h2>
+                <p>Let's personalize your learning experience.</p>
+              </div>
+
+              <form onSubmit={onSubmit} className="onboarding-form">
+                <div className="form-group">
+                  <label>What's your name?</label>
+                  <input 
+                    type="text" 
+                    placeholder="Enter your name"
+                    value={userSettings.username}
+                    onChange={e => setUserSettings({...userSettings, username: e.target.value})}
+                    required
+                    autoFocus
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Select Region to Learn About</label>
+                  <div className="pill-group">
+                    {COUNTRIES.map(c => (
+                      <button 
+                        key={c.code}
+                        type="button"
+                        className={`pill ${userSettings.country === c.code ? 'active' : ''}`}
+                        onClick={() => setUserSettings({...userSettings, country: c.code})}
+                      >
+                        {c.name}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '1rem', marginTop: '2rem' }}>
+                  <motion.button 
+                    type="button" 
+                    className="btn"
+                    onClick={() => setStep(1)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ flex: 1, background: 'rgba(128,128,128,0.2)' }}
+                  >
+                    ← Back
+                  </motion.button>
+                  <motion.button 
+                    type="submit" 
+                    className="btn btn-primary onboard-submit"
+                    whileHover={{ scale: 1.02, boxShadow: "0px 10px 20px rgba(26,115,232,0.4)" }}
+                    whileTap={{ scale: 0.98 }}
+                    style={{ flex: 2, marginTop: 0 }}
+                    disabled={!userSettings.username.trim() || isHyperjumping}
+                  >
+                    {isHyperjumping ? 'Entering...' : 'Enter ElectionIQ'}
+                  </motion.button>
+                </div>
+              </form>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </main>
 
       <motion.footer 
@@ -986,11 +953,39 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
         animate={{ opacity: 1 }}
         transition={{ delay: 0.5 }}
       >
-        <span>Supported in 100+ nations</span>
+        <span>Supported in 195+ nations</span>
         <div className="dots">
           <span></span><span></span><span></span>
         </div>
       </motion.footer>
+    </div>
+  );
+}
+
+function Stardust() {
+  const stars = Array.from({ length: 50 }).map((_, i) => ({
+    id: i,
+    left: `${Math.random() * 100}%`,
+    top: `${Math.random() * 100}%`,
+    size: `${Math.random() * 3}px`,
+    duration: `${Math.random() * 3 + 2}s`
+  }));
+
+  return (
+    <div className="stardust-container">
+      {stars.map(star => (
+        <div 
+          key={star.id} 
+          className="star" 
+          style={{ 
+            left: star.left, 
+            top: star.top, 
+            width: star.size, 
+            height: star.size,
+            '--duration': star.duration 
+          }} 
+        />
+      ))}
     </div>
   );
 }
@@ -1123,6 +1118,71 @@ function InteractiveCard({ stage, offset, isCurrent, onClick, onNext, onPrev }) 
         <img src={stage.image} alt={stage.title} />
       </motion.div>
     </motion.div>
+  );
+}
+
+function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatInput, setChatInput, isTyping, STARTER_QUESTIONS, chatEndRef }) {
+  return (
+    <div className="ai-orb-container">
+      <AnimatePresence>
+        {isOpen && (
+          <motion.div 
+            className="ai-chat-panel"
+            initial={{ opacity: 0, scale: 0.5, y: 100 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.5, y: 100 }}
+            transition={{ type: "spring", damping: 25, stiffness: 300 }}
+          >
+            <div className="ai-chat-header">
+              <h3>ElectionIQ Assistant</h3>
+              <button className="close-btn" onClick={() => setIsOpen(false)}>✕</button>
+            </div>
+            <div className="chat-history">
+              {chatHistory.map((msg, idx) => (
+                <div key={idx} className={`chat-bubble ${msg.role === 'user' ? 'user' : 'ai'}`}>
+                  {msg.content}
+                </div>
+              ))}
+              {isTyping && (
+                <div className="chat-bubble ai typing-indicator">
+                  <span></span><span></span><span></span>
+                </div>
+              )}
+              <div ref={chatEndRef} />
+            </div>
+            <div className="chat-input-area">
+              <div className="starter-chips">
+                {STARTER_QUESTIONS.map((q, i) => (
+                  <button key={i} className="chip" onClick={() => sendChatMessage(q)}>
+                    {q}
+                  </button>
+                ))}
+              </div>
+              <form className="input-form" onSubmit={(e) => { e.preventDefault(); sendChatMessage(chatInput); }}>
+                <input 
+                  value={chatInput}
+                  onChange={(e) => setChatInput(e.target.value)}
+                  placeholder="Ask me anything..."
+                  disabled={isTyping}
+                />
+                <button type="submit" className="btn btn-primary" disabled={isTyping || !chatInput.trim()}>
+                  Send
+                </button>
+              </form>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
+      <motion.div 
+        className="ai-orb"
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        onClick={() => setIsOpen(!isOpen)}
+      >
+        {isOpen ? '✕' : '🗳️'}
+      </motion.div>
+    </div>
   );
 }
 
