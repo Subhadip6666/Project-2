@@ -303,6 +303,13 @@ function App() {
         setHasOnboarded(true);
         localStorage.setItem('hasOnboarded', 'true');
         localStorage.setItem('userSettings', JSON.stringify(userSettings));
+        
+        // Update initial chat message with real username
+        const countryName = COUNTRIES.find(c => c.code === userSettings.country)?.name || 'your country';
+        setChatHistory([
+          { role: 'assistant', content: `Welcome to ElectionIQ, ${userSettings.username}! I'm ready to help you explore the electoral process in ${countryName}. Where should we start?` }
+        ]);
+        
         setIsHyperjumping(false);
       }, 1500);
     }
@@ -743,16 +750,18 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
     let globe = null;
 
     const initTimeout = setTimeout(() => {
-      if (canvasRef.current) {
+      if (!canvasRef.current) return;
+      
+      try {
         globe = createGlobe(canvasRef.current, {
-          devicePixelRatio: 1,
-          width: 800,
-          height: 800,
+          devicePixelRatio: 2,
+          width: 600 * 2,
+          height: 600 * 2,
           phi: 0,
           theta: 0.3,
           dark: theme === 'dark' ? 1 : 0,
           diffuse: 1.2,
-          mapSamples: 8000,
+          mapSamples: 16000,
           mapBrightness: 6,
           baseColor: theme === 'dark' ? [0.3, 0.3, 0.3] : [1, 1, 1],
           markerColor: [0.1, 0.8, 1],
@@ -760,14 +769,18 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
           markers: [
             { location: [37.7595, -122.4367], size: 0.03 },
             { location: [40.7128, -74.0060], size: 0.1 },
+            { location: [20.5937, 78.9629], size: 0.1 }, // India
+            { location: [51.5074, -0.1278], size: 0.1 }, // UK
           ],
           onRender: (state) => {
             state.phi = phi;
-            phi += 0.003;
+            phi += 0.005;
           }
         });
+      } catch (e) {
+        console.error("Globe init error:", e);
       }
-    }, 500);
+    }, 100);
 
     return () => {
       clearTimeout(initTimeout);
@@ -775,7 +788,7 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
         globe.destroy();
       }
     };
-  }, [theme, step === 2]); // Only recreate globe if step 2 changes significantly (or keep it simple)
+  }, [theme, step]); 
 
   const handleNextStep = (e) => {
     if (e) e.preventDefault();

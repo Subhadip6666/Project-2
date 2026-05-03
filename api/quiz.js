@@ -4,50 +4,50 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY || '',
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 1500,
-        messages: [
-          {
-            role: 'user',
-            content: "Generate exactly 5 multiple choice questions to test a user's understanding of the election process. Base them on these topics: voter registration, candidate nomination, campaigning, voting day, vote counting, results declaration, and inauguration. Each question must have 4 options labeled A, B, C, D with exactly one correct answer. Return only a JSON array in this format: [{\"question\": \"...\", \"options\": [\"A. ...\", \"B. ...\", \"C. ...\", \"D. ...\"], \"correct\": \"A\"}]"
-          }
-        ]
+        contents: [{
+          parts: [{ text: "Generate exactly 5 multiple choice questions to test a user's understanding of the election process. Base them on these topics: voter registration, candidate nomination, campaigning, voting day, vote counting, results declaration, and inauguration. Each question must have 4 options labeled A, B, C, D with exactly one correct answer. Return only a JSON array in this format: [{\"question\": \"...\", \"options\": [\"A. ...\", \"B. ...\", \"C. ...\", \"D. ...\"], \"correct\": \"A\"}]" }]
+        }],
+        generationConfig: {
+          maxOutputTokens: 1500,
+          temperature: 0.8,
+          response_mime_type: "application/json" // Gemini supports JSON mode!
+        }
       })
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Anthropic API error:', errorData);
-      return res.status(response.status).json({ error: 'Anthropic API error' });
+      console.error('Gemini API error:', errorData);
+      return res.status(response.status).json({ error: 'Gemini API error' });
     }
 
     const data = await response.json();
     
     // Attempt to extract the JSON array from the response text
-    const textContent = data.content[0].text;
-    const jsonMatch = textContent.match(/\[[\s\S]*\]/);
+    const textContent = data.candidates?.[0]?.content?.parts?.[0]?.text;
     
-    if (jsonMatch) {
-      try {
+    try {
+      // Gemini JSON mode is very reliable, but let's be safe
+      const quizData = JSON.parse(textContent);
+      return res.status(200).json(quizData);
+    } catch (parseError) {
+      console.error('JSON parse error:', parseError);
+      // Fallback: try to regex it if it's not perfect JSON
+      const jsonMatch = textContent.match(/\[[\s\S]*\]/);
+      if (jsonMatch) {
         const quizData = JSON.parse(jsonMatch[0]);
         return res.status(200).json(quizData);
-      } catch (parseError) {
-        console.error('JSON parse error:', parseError);
-        return res.status(500).json({ error: 'Quiz generation failed. Please try again.' });
       }
-    } else {
-      return res.status(500).json({ error: 'Failed to extract JSON from response.' });
+      return res.status(500).json({ error: 'Quiz generation failed. Please try again.' });
     }
   } catch (error) {
-    console.error('Error calling Anthropic API:', error);
+    console.error('Error calling Gemini API:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }

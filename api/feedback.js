@@ -10,35 +10,34 @@ export default async function handler(req, res) {
   }
 
   try {
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
+    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': process.env.ANTHROPIC_API_KEY || '',
-        'anthropic-version': '2023-06-01'
+        'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        model: 'claude-3-haiku-20240307',
-        max_tokens: 250,
-        messages: [
-          {
-            role: 'user',
-            content: `The user just took a 5-question quiz on the election process and scored ${score} out of 5. Generate a 2-3 sentence personalized feedback message. Be encouraging but indicate what they might need to review if the score is low.`
-          }
-        ]
+        contents: [{
+          parts: [{ text: `The user just took a 5-question quiz on the election process and scored ${score} out of 5. Generate a 2-3 sentence personalized feedback message. Be encouraging but indicate what they might need to review if the score is low.` }]
+        }],
+        generationConfig: {
+          maxOutputTokens: 250,
+          temperature: 0.7
+        }
       })
     });
 
     if (!response.ok) {
       const errorData = await response.text();
-      console.error('Anthropic API error:', errorData);
-      return res.status(response.status).json({ error: 'Anthropic API error' });
+      console.error('Gemini API error:', errorData);
+      return res.status(response.status).json({ error: 'Gemini API error' });
     }
 
     const data = await response.json();
-    res.status(200).json({ feedback: data.content[0].text });
+    const feedbackText = data.candidates?.[0]?.content?.parts?.[0]?.text || "Great job taking the quiz!";
+    
+    res.status(200).json({ feedback: feedbackText });
   } catch (error) {
-    console.error('Error calling Anthropic API:', error);
+    console.error('Error calling Gemini API:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 }
