@@ -1,5 +1,5 @@
 # Simplified Dockerfile for Cloud Run (Single Stage)
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
