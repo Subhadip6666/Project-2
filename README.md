@@ -22,7 +22,23 @@
 - **Animations**: Framer Motion
 - **Styling**: Vanilla CSS (Premium Glassmorphism)
 - **API/Backend**: Vercel Serverless Functions
-- **Deployment**: Vercel
+- **Deployment**: Google Cloud Run (Containerized) / Vercel (Serverless)
+
+## ☁️ Google Cloud Deployment
+
+This project is optimized for **Google Cloud Run**. 
+
+### 1. Automated Deployment (Cloud Build)
+Run the following command to build and deploy automatically using the included `cloudbuild.yaml`:
+```bash
+gcloud builds submit --config cloudbuild.yaml --substitutions=_PROJECT_ID=$(gcloud config get-value project)
+```
+
+### 2. Manual Deployment
+If you prefer building locally:
+```bash
+gcloud run deploy election-iq --source . --platform managed --region us-central1 --allow-unauthenticated
+```
 
 ## 🛠️ Getting Started
 
