@@ -7,14 +7,16 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "node server.js"
   },
   "dependencies": {
     "canvas-confetti": "^1.9.4",
     "cobe": "^2.0.1",
     "framer-motion": "^12.38.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "express": "^4.21.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",

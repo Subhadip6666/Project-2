@@ -1,0 +1,15 @@
+# .gcloudignore
+# This file specifies files that should be ignored by gcloud when 
+# uploading source code to Google Cloud.
+
+.gcloudignore
+.git
+.gitignore
+
+# Ignore node_modules and build artifacts
+node_modules/
+dist/
+
+# Environment files
+.env
+.env.*
