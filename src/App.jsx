@@ -3,7 +3,7 @@ import { motion, AnimatePresence, useMotionValue, useTransform } from 'framer-mo
 import confetti from 'canvas-confetti';
 import './index.css';
 
-import { COUNTRIES, COUNTRY_SPECIFIC_CONTENT, GLOBAL_FALLBACK_CONTENT, LANGUAGES, TIMELINE_STAGES, STARTER_QUESTIONS } from './data';
+import { COUNTRIES, COUNTRY_SPECIFIC_CONTENT, GLOBAL_FALLBACK_CONTENT, LANGUAGES, TIMELINE_STAGES, STARTER_QUESTIONS, TRANSLATIONS } from './data';
 import createGlobe from 'cobe';
 
 const containerVariants = {
@@ -23,7 +23,7 @@ function App() {
   const [hasOnboarded, setHasOnboarded] = useState(false); // Always show landing page first
   const [userSettings, setUserSettings] = useState(() => {
     const saved = localStorage.getItem('userSettings');
-    return saved ? JSON.parse(saved) : { username: '', country: 'US', language: 'en' };
+    return saved ? JSON.parse(saved) : { username: '', country: 'IN', language: 'hi' };
   });
 
   useEffect(() => {
@@ -35,6 +35,12 @@ function App() {
     const saved = localStorage.getItem('completedStages');
     return saved ? JSON.parse(saved) : [];
   });
+
+  // Translation helper
+  const t = (key) => {
+    const lang = userSettings.language || 'en';
+    return TRANSLATIONS[lang]?.[key] || TRANSLATIONS['en'][key] || key;
+  };
 
   const [stages, setStages] = useState(TIMELINE_STAGES);
 
@@ -164,7 +170,10 @@ function App() {
       const res = await fetch('/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ messages: apiMessages })
+        body: JSON.stringify({ 
+          messages: apiMessages,
+          language: userSettings.language 
+        })
       });
 
       if (!res.ok) throw new Error('API Error');
@@ -203,7 +212,11 @@ function App() {
     setSelectedOption(null);
 
     try {
-      const res = await fetch('/api/quiz', { method: 'POST' });
+      const res = await fetch('/api/quiz', { 
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ language: userSettings.language })
+      });
       if (!res.ok) throw new Error('API Error');
       const data = await res.json();
       
@@ -307,7 +320,7 @@ function App() {
         // Update initial chat message with real username
         const countryName = COUNTRIES.find(c => c.code === userSettings.country)?.name || 'your country';
         setChatHistory([
-          { role: 'assistant', content: `Welcome to ElectionIQ, ${userSettings.username}! I'm ready to help you explore the electoral process in ${countryName}. Where should we start?` }
+          { role: 'assistant', content: `${t('welcome')}, ${userSettings.username}! ${t('onboardingSub')} ${countryName}.` }
         ]);
         
         setIsHyperjumping(false);
@@ -374,9 +387,9 @@ function App() {
           transition={{ delay: 0.3, type: "spring" }}
         >
           <div className="progress-steps">
-            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 1 ? 'active' : ''}`}>Learn</motion.span> → 
-            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 2 ? 'active' : ''}`}>Ask</motion.span> → 
-            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 3 ? 'active' : ''}`}>Test Yourself</motion.span>
+            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 1 ? 'active' : ''}`}>{t('learnMore')}</motion.span> → 
+            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 2 ? 'active' : ''}`}>{t('chatAssistant')}</motion.span> → 
+            <motion.span whileHover={{ scale: 1.1 }} className={`step ${activeStep >= 3 ? 'active' : ''}`}>{t('quiz')}</motion.span>
           </div>
           <div className="progress-bar-bg">
             <motion.div 
@@ -399,7 +412,7 @@ function App() {
             transition={{ type: "spring", bounce: 0.4 }}
             style={{ textAlign: 'center', marginBottom: '1rem' }}
           >
-            <h2>Election Timeline Guide</h2>
+            <h2>{t('timeline')}</h2>
           </motion.div>
           
           <div className="timeline-app">
@@ -475,7 +488,7 @@ function App() {
 
                   return (
                     <div key={`info-${stage.id}`} className={className}>
-                      <h1 className="text name">{stage.id}. {stage.title}</h1>
+                      <h1 className="text name">{stage.id}. {t(stage.title.toLowerCase().split(' ').pop()) || stage.title}</h1>
                       <h4 className="text location">{stage.teaser}</h4>
                       <div className="text description">
                         <p style={{ marginBottom: '1.2rem' }}>{stage.details}</p>
@@ -547,7 +560,7 @@ function App() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            Quiz
+            {t('quiz')}
           </motion.h2>
           
           <AnimatePresence>
@@ -951,7 +964,7 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
                     style={{ flex: 2, marginTop: 0 }}
                     disabled={!userSettings.username.trim() || isHyperjumping}
                   >
-                    {isHyperjumping ? 'Entering...' : 'Enter ElectionIQ'}
+                    {isHyperjumping ? '...' : t('finish')}
                   </motion.button>
                 </div>
               </form>
@@ -1147,7 +1160,7 @@ function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatI
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
           >
             <div className="ai-chat-header">
-              <h3>ElectionIQ Assistant</h3>
+              <h3>{t('chatAssistant')}</h3>
               <button className="close-btn" onClick={() => setIsOpen(false)}>✕</button>
             </div>
             <div className="chat-history">
@@ -1175,7 +1188,7 @@ function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatI
                 <input 
                   value={chatInput}
                   onChange={(e) => setChatInput(e.target.value)}
-                  placeholder="Ask me anything..."
+                  placeholder={t('askAnything')}
                   disabled={isTyping}
                 />
                 <button type="submit" className="btn btn-primary" disabled={isTyping || !chatInput.trim()}>

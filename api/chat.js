@@ -3,14 +3,13 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { messages } = req.body;
+  const { messages, language = 'en' } = req.body;
 
   if (!messages) {
     return res.status(400).json({ error: 'Messages are required' });
   }
 
   try {
-    // Map OpenAI/Anthropic messages format to Gemini format
     const contents = messages.map(msg => ({
       role: msg.role === 'assistant' ? 'model' : 'user',
       parts: [{ text: msg.content }]
@@ -24,7 +23,11 @@ export default async function handler(req, res) {
       body: JSON.stringify({
         contents: contents,
         system_instruction: {
-          parts: [{ text: "You are ElectionIQ, a civic education assistant. Your only job is to help users understand how elections work — including voter registration, campaigning, voting procedures, vote counting, results, and the role of election bodies. Always explain in simple, clear language suitable for a first-time voter. If a user asks anything unrelated to elections or civic processes, politely redirect them. Never discuss specific political parties, candidates, or take any political stance." }]
+          parts: [{ text: `You are ElectionIQ, a civic education assistant. 
+            CRITICAL: You MUST respond strictly in the following language: ${language}.
+            Your only job is to help users understand how elections work — including voter registration, campaigning, voting procedures, vote counting, results, and the role of election bodies. 
+            Always explain in simple, clear language suitable for a first-time voter. 
+            Never discuss specific political parties, candidates, or take any political stance.` }]
         },
         generationConfig: {
           maxOutputTokens: 1024,

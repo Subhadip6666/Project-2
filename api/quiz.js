@@ -3,6 +3,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
+  const { language = 'en' } = req.body;
+
   try {
     const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`, {
       method: 'POST',
@@ -11,7 +13,11 @@ export default async function handler(req, res) {
       },
       body: JSON.stringify({
         contents: [{
-          parts: [{ text: "Generate exactly 5 multiple choice questions to test a user's understanding of the election process. Base them on these topics: voter registration, candidate nomination, campaigning, voting day, vote counting, results declaration, and inauguration. Each question must have 4 options labeled A, B, C, D with exactly one correct answer. Return only a JSON array in this format: [{\"question\": \"...\", \"options\": [\"A. ...\", \"B. ...\", \"C. ...\", \"D. ...\"], \"correct\": \"A\"}]" }]
+          parts: [{ text: `Generate exactly 5 multiple choice questions to test a user's understanding of the election process. 
+            CRITICAL: Everything (questions and options) MUST be in the following language: ${language}.
+            Base them on these topics: voter registration, candidate nomination, campaigning, voting day, vote counting, results declaration, and inauguration. 
+            Each question must have 4 options labeled A, B, C, D with exactly one correct answer. 
+            Return only a JSON array in this format: [{"question": "...", "options": ["A. ...", "B. ...", "C. ...", "D. ..."], "correct": "A"}]` }]
         }],
         generationConfig: {
           maxOutputTokens: 1500,
