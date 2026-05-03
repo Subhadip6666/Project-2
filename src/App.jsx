@@ -345,6 +345,7 @@ function App() {
             theme={theme}
             toggleTheme={toggleTheme}
             isHyperjumping={isHyperjumping}
+            t={t}
           />
         </motion.div>
       ) : (
@@ -489,12 +490,12 @@ function App() {
                   return (
                     <div key={`info-${stage.id}`} className={className}>
                       <h1 className="text name">{stage.id}. {t(stage.title.toLowerCase().split(' ').pop()) || stage.title}</h1>
-                      <h4 className="text location">{stage.teaser}</h4>
+                      <h4 className="text location">{t(`stage${stage.id}_teaser`) || stage.teaser}</h4>
                       <div className="text description">
-                        <p style={{ marginBottom: '1.2rem' }}>{stage.details}</p>
+                        <p style={{ marginBottom: '1.2rem' }}>{t(`stage${stage.id}_details`) || stage.details}</p>
                         <div className="fact-box">
                           <span className="fact-icon">💡</span>
-                          <span>{stage.fact}</span>
+                          <span>{t(`stage${stage.id}_fact`) || stage.fact}</span>
                         </div>
                         
                         <div className="stage-actions">
@@ -551,6 +552,7 @@ function App() {
           isTyping={isTyping}
           STARTER_QUESTIONS={STARTER_QUESTIONS}
           chatEndRef={chatEndRef}
+          t={t}
         />
 
         {/* Section 3: Quiz */}
@@ -754,7 +756,7 @@ function App() {
 }
 
 // Landing Page Component
-function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleTheme, isHyperjumping }) {
+function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleTheme, isHyperjumping, t }) {
   const [step, setStep] = useState(0); // 0: Splash, 1: Language, 2: Name/Region
   const canvasRef = useRef();
 
@@ -872,12 +874,12 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
               transition={{ type: "spring", bounce: 0.3 }}
             >
               <div className="onboarding-header">
-                <h1>Global Elections Guide</h1>
-                <p>Empowering voters worldwide through AI-driven education.</p>
+                <h1>{t('welcome')}</h1>
+                <p>{t('onboardingSub')}</p>
               </div>
 
               <div className="form-group">
-                <label>Select Language / Idioma</label>
+                <label>{t('selectLanguage')}</label>
                 <div className="pill-group">
                   {LANGUAGES.map(l => (
                     <button 
@@ -897,7 +899,7 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
                 whileHover={{ scale: 1.02, boxShadow: "0px 10px 20px rgba(26,115,232,0.4)" }}
                 whileTap={{ scale: 0.98 }}
               >
-                Continue →
+                {t('next')} →
               </motion.button>
             </motion.div>
           )}
@@ -912,13 +914,13 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
               transition={{ type: "spring", bounce: 0.4 }}
             >
               <div className="onboarding-header">
-                <h2>Welcome aboard.</h2>
-                <p>Let's personalize your learning experience.</p>
+                <h2>{t('welcome')}</h2>
+                <p>{t('onboardingSub')}</p>
               </div>
 
               <form onSubmit={onSubmit} className="onboarding-form">
                 <div className="form-group">
-                  <label>What's your name?</label>
+                  <label>{t('enterName')}</label>
                   <input 
                     type="text" 
                     placeholder="Enter your name"
@@ -930,7 +932,7 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
                 </div>
 
                 <div className="form-group">
-                  <label>Select Region to Learn About</label>
+                  <label>{t('selectCountry')}</label>
                   <div className="pill-group">
                     {COUNTRIES.map(c => (
                       <button 
@@ -954,7 +956,7 @@ function LandingPage({ userSettings, setUserSettings, onSubmit, theme, toggleThe
                     whileTap={{ scale: 0.98 }}
                     style={{ flex: 1, background: 'rgba(128,128,128,0.2)' }}
                   >
-                    ← Back
+                    ← {t('back')}
                   </motion.button>
                   <motion.button 
                     type="submit" 
@@ -1147,7 +1149,7 @@ function InteractiveCard({ stage, offset, isCurrent, onClick, onNext, onPrev }) 
   );
 }
 
-function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatInput, setChatInput, isTyping, STARTER_QUESTIONS, chatEndRef }) {
+function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatInput, setChatInput, isTyping, STARTER_QUESTIONS, chatEndRef, t }) {
   return (
     <div className="ai-orb-container">
       <AnimatePresence>
@@ -1192,7 +1194,7 @@ function FloatingAIChat({ isOpen, setIsOpen, chatHistory, sendChatMessage, chatI
                   disabled={isTyping}
                 />
                 <button type="submit" className="btn btn-primary" disabled={isTyping || !chatInput.trim()}>
-                  Send
+                  {t('send')}
                 </button>
               </form>
             </div>
