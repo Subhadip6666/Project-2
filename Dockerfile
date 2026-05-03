@@ -1,22 +1,25 @@
-# Step 1: Build the React application
-FROM node:18-alpine AS build
-WORKDIR /app
-COPY package*.json ./
-RUN npm install
-COPY . .
-RUN npm run build
-
-# Step 2: Serve the application with Express
+# Simplified Dockerfile for Cloud Run (Single Stage)
 FROM node:18-alpine
+
 WORKDIR /app
+
+# Copy dependency files
 COPY package*.json ./
-RUN npm install --production
-COPY --from=build /app/dist ./dist
-COPY --from=build /app/api ./api
-COPY server.js ./
+
+# Install all dependencies (including devDeps needed for 'npm run build')
+RUN npm install
+
+# Copy all source files
+COPY . .
+
+# Build the React application
+RUN npm run build
 
 # Set environment variables
 ENV PORT=8080
+ENV NODE_ENV=production
+
 EXPOSE 8080
 
+# Run the production Express server
 CMD ["node", "server.js"]
